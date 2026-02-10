@@ -1,0 +1,150 @@
+﻿<Window x:Class="ClipboardPlus.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:keys="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:local="clr-namespace:ClipboardPlus"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="Clipboard+" 
+        MinHeight="250"
+        MinWidth="250"
+        Height="250" 
+        Width="250"
+        ShowInTaskbar="False"
+        WindowStartupLocation="Manual"
+        ResizeMode="CanMinimize"
+        Topmost="True" 
+        Icon="/Resources/clipboardplus.ico">
+  <Grid Height="240">
+    <DataGrid 
+      ToolTip="Use the tilde(~) key to clear the clipboard"
+      ItemsSource="{Binding Items}"
+      Name="ClipboardPlusDataGrid" 
+      AutoGenerateColumns="False" 
+      HeadersVisibility="Column" 
+      CanUserSortColumns="False"
+      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+      IsReadOnly="True" 
+      Margin="0,0,0,90">
+      <DataGrid.Columns>
+        <DataGridTextColumn 
+          Header="Clipboard items (Ctrl + C adds items) "
+          Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+          Width="*" />
+      </DataGrid.Columns>
+    </DataGrid>
+    <Grid Name="TypeSpeedGrid" Margin="10,154,0,63" >
+      <TextBlock 
+        Name="TypeSpeed"
+        Text="Typing Speed(ms): "
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Center"
+        Width="105" 
+        Margin="0,2,0,3"
+              />
+      <ComboBox Name="TypeSpeedCombo" 
+                ToolTip="Sets the speed that characters are typed from the clipboard.&#x0a;Set to a higher speed for slow connections."
+                HorizontalAlignment ="Left"
+                VerticalAlignment="Center"
+                SelectedItem="{Binding TypingSpeed, Mode=TwoWay}" Width="44" RenderTransformOrigin="-0.129,0.466" Margin="105,0,0,0">
+        <ComboBox.ItemsSource>
+          <x:Array Type="{x:Type sys:Int32}">
+            <sys:Int32>20</sys:Int32>
+            <sys:Int32>30</sys:Int32>
+            <sys:Int32>40</sys:Int32>
+            <sys:Int32>50</sys:Int32>
+            <sys:Int32>100</sys:Int32>
+          </x:Array>
+        </ComboBox.ItemsSource>
+      </ComboBox>
+      <TextBlock 
+        Name="Help"
+        Text="Help*"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        Margin="180,3,0,3"
+        ToolTip="This clipboard will only work if you copy text using the windows shortcut Ctrl + C.&#x0a;If you do not select an item it will always type out the last copied item.&#x0a;To clear the values in the clipboard use the tilde key(~).&#x0a;To cancel typing in progress use the ESC key.&#x0a;If you notice letters at the beginning of your string missing try increasing the typing speed value.&#x0a;Set the first and second hotkeys to the same value to use only two keys instead of three.&#x0a;Use Ctrl + Left Mouse click to de-select an item.&#x0a;If you select multiple items only the first one selected will be typed out."/>
+    </Grid>
+    <Grid Margin="0,184,0,36">
+      <ComboBox 
+        Name="HotKey1"
+        ToolTip="Set the first key of the hotkeys.&#x0a;Set both hotkeys to the same value to only use 2 keys instead of 3.&#x0a;LMenu = Left Alt Key.&#x0a;LShiftKey = Left Shift Key."
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        Margin="11,0,0,0"
+        SelectedItem="{Binding Key1, Mode=TwoWay}" 
+        Width="55" 
+        Height="20">
+        <ComboBox.ItemsSource>
+          <x:Array Type="{x:Type keys:Keys}">
+            <keys:Keys>LControlKey</keys:Keys>
+            <keys:Keys>LMenu</keys:Keys>
+            <keys:Keys>LShiftKey</keys:Keys>
+            <!--<keys:Keys></keys:Keys> Add more keys here-->
+          </x:Array>
+        </ComboBox.ItemsSource>
+      </ComboBox>
+      <TextBlock Text="+" 
+                 HorizontalAlignment="Left" 
+                 VerticalAlignment="Center"
+                 Margin="66,0,0,0" 
+                 Height="20" 
+                 Width="8"/>
+      <ComboBox 
+        Name="HotKey2"
+        ToolTip="Set the second key of the hotkeys.&#x0a;LMenu = Left Alt Key.&#x0a;LShiftKey = Left Shift Key."
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        Margin="74,0,0,0"
+        SelectedItem="{Binding Key2, Mode=TwoWay}" 
+        Width="57" 
+        Height="20">
+        <ComboBox.ItemsSource>
+          <x:Array Type="{x:Type keys:Keys}">
+            <keys:Keys>LControlKey</keys:Keys>
+            <keys:Keys>LMenu</keys:Keys>
+            <!-- Alt    -->
+            <keys:Keys>LShiftKey</keys:Keys>
+            <!-- Shift  -->
+            <!--<keys:Keys></keys:Keys> Add more keys here-->
+          </x:Array>
+        </ComboBox.ItemsSource>
+      </ComboBox>
+      <ComboBox 
+        Name="HotKey3"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        Margin="139,0,0,0"
+        SelectedItem="{Binding Key3, Mode=TwoWay}" 
+        Width="37" 
+        Height="20">
+        <ComboBox.ItemsSource>
+          <x:Array Type="{x:Type keys:Keys}">
+            <keys:Keys>V</keys:Keys>
+            <!--<keys:Keys></keys:Keys> Add more keys here-->
+          </x:Array>
+        </ComboBox.ItemsSource>
+      </ComboBox>
+      <TextBlock 
+        Name="InfoText"
+        Text="to type"
+        VerticalAlignment="Top" 
+        Height="17" 
+        Margin="181,0,10,0"/>
+      <TextBlock Text="+" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Center"
+        Margin="131,0,0,0" 
+        Height="20" 
+        Width="8"/>
+    </Grid>
+    <!--<TextBlock Name="LogBlock"
+               Text=""
+               VerticalAlignment="Top" 
+               Height="17" 
+               Margin="1,191,0,0"/>-->
+  </Grid>
+</Window>
