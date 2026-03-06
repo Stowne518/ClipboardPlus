@@ -27,11 +27,15 @@
       HeadersVisibility="Column" 
       CanUserSortColumns="False"
       SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-      IsReadOnly="True" 
+      IsReadOnly="False" 
       Margin="0,0,0,90">
       <DataGrid.Columns>
+        <DataGridCheckBoxColumn
+          Header="Lock"
+          Binding="{Binding IsLocked, UpdateSourceTrigger=PropertyChanged}" />
         <DataGridTextColumn 
-          Header="Clipboard items (Ctrl + C adds items) "
+          Header="Clipboard items"
+          IsReadOnly="True"
           Binding="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
           Width="*" />
       </DataGrid.Columns>
@@ -49,7 +53,7 @@
                 ToolTip="Sets the speed that characters are typed from the clipboard.&#x0a;Set to a higher speed for slow connections."
                 HorizontalAlignment ="Left"
                 VerticalAlignment="Center"
-                SelectedItem="{Binding TypingSpeed, Mode=TwoWay}" Width="44" RenderTransformOrigin="-0.129,0.466" Margin="105,0,0,0">
+                SelectedItem="{Binding TypingSpeed, Mode=TwoWay}" Width="48" RenderTransformOrigin="-0.129,0.466" Margin="105,0,0,0">
         <ComboBox.ItemsSource>
           <x:Array Type="{x:Type sys:Int32}">
             <sys:Int32>20</sys:Int32>
@@ -66,7 +70,7 @@
         HorizontalAlignment="Left"
         VerticalAlignment="Center"
         Margin="180,3,0,3"
-        ToolTip="This clipboard will only work if you copy text using the windows shortcut Ctrl + C.&#x0a;If you do not select an item it will always type out the last copied item.&#x0a;To clear the values in the clipboard use the tilde key(~).&#x0a;To cancel typing in progress use the ESC key.&#x0a;If you notice letters at the beginning of your string missing try increasing the typing speed value.&#x0a;Set the first and second hotkeys to the same value to use only two keys instead of three.&#x0a;Use Ctrl + Left Mouse click to de-select an item.&#x0a;If you select multiple items only the first one selected will be typed out."/>
+        ToolTip="CTRL + C: Copy text into clipboard.&#x0a;LEFT-CLICK: Select an item to type, otherwise it will always type out the first item in list.&#x0a;LOCK: Prevents the value from being overwritten and pin it to the top.&#x0a;TILDE(~): Clear all values in the clipboard.&#x0a;ESC: Cancel typing in progress.&#x0a;If you notice letters at the beginning of your string missing try increasing the typing speed value.&#x0a;Set the first and second hotkeys to the same value to use only two keys instead of three.&#x0a;Use Ctrl + Left Mouse click to de-select an item.&#x0a;If you select multiple items only the first one selected will be typed out."/>
     </Grid>
     <Grid Margin="0,184,0,36">
       <ComboBox 
@@ -123,7 +127,11 @@
         Height="20">
         <ComboBox.ItemsSource>
           <x:Array Type="{x:Type keys:Keys}">
+            <keys:Keys>P</keys:Keys>
+            <keys:Keys>T</keys:Keys>
             <keys:Keys>V</keys:Keys>
+            <keys:Keys>Y</keys:Keys>
+            <keys:Keys>Z</keys:Keys>
             <!--<keys:Keys></keys:Keys> Add more keys here-->
           </x:Array>
         </ComboBox.ItemsSource>

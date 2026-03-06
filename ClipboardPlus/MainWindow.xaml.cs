@@ -28,6 +28,7 @@ namespace ClipboardPlus
     public ObservableCollection<StringItem> Items { get; set; }
     public List<Keys> HotKeys { get; set; }
     public string StoreSelectedItem { get; set; }
+    public string StoreLockedItem { get; set; }
     public int StoreTypingSpeed { get; set; }
 
     // Default Hotkeys
@@ -150,7 +151,7 @@ namespace ClipboardPlus
 
       _killSwitchPressed = false; // Reset before starting
 
-      await Task.Delay(100);
+      await Task.Delay(300);
       for (int i = 0; i < StoreSelectedItem.Length; i++)
       {
         if (_killSwitchPressed)
@@ -307,8 +308,6 @@ namespace ClipboardPlus
     {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
-    
     private void HookManager_KeyPress(object sender, KeyPressEventArgs e)
     {
       Log(string.Format("KeyPress \t {0}\n", e.KeyChar));
@@ -323,23 +322,26 @@ namespace ClipboardPlus
       if (e.Control && e.KeyCode == Keys.C)
       {
         // Ctrl+C detected
-        await Task.Delay(50); // Let windows clipboard catch up
+        await Task.Delay(100); // Let windows clipboard catch up
         // Clipboard capture logic
         string ClipboardText = Clipboard.GetText();
-        bool exists = false;
-        for (int i = 0; i < Items.Count; i++)
-        {
-          if (Items[i].Value.Equals(ClipboardText))
-          {
-            exists = true;
-            break;
-          }
-        }
+        bool exists = Items.Any(item => item.Value.Equals(ClipboardText));
         if (!exists)
         {
-          if (Items.Count >= 5)
-            Items.RemoveAt(4);
-          Items.Insert(0, new StringItem(ClipboardText));
+          var locked = Items.Where(i => i.IsLocked).ToList();
+          var unlocked = Items.Where(i => !i.IsLocked).ToList();
+
+          unlocked.Insert(0, new StringItem(ClipboardText));
+          int maxUnlocked = Math.Max(0, 5 - locked.Count);
+          if (unlocked.Count > maxUnlocked)
+            unlocked = unlocked.Take(maxUnlocked).ToList();
+
+          // Rebuild Items collection
+          Items.Clear();
+          foreach (var item in locked)
+            Items.Add(item);
+          foreach (var item in unlocked)
+            Items.Add(item);
         }
       }
       else if (e.KeyCode == Keys.Oemtilde)
